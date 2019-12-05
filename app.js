@@ -10,20 +10,8 @@ class Book {
 //UI class
 class UI {
   static displayBooks() {
-    const StoredBooks = [
-      {
-        title: "Book One",
-        author: " Jane DOe",
-        isbn: "3434434"
-      },
-      {
-        title: "Book Two",
-        author: " Jane DOe",
-        isbn: "45545"
-      }
-    ];
-    const books = SroredBooks;
-    books.forEach((book)=> UI.addBookToList(book));
+    const books = Store.getBooks();
+    books.forEach((book=> UI.addBookToList(book));
 
 
   }
@@ -66,6 +54,36 @@ list.appendChild(row);
 
 }
 //Store class
+class Store {
+  static getBooks() {
+  let books;
+  if(localStorage.getItem('books') === null){
+    books = [];
+  }else{
+    books = JSON.parse(localStorage.getItem('books'));
+  }
+return books;
+
+}
+  static addBook(book) {
+    const books = Store.getBooks();
+    books.push(book);
+    localStorage.setItem('books', JSON.stringify(books));
+
+  }
+  static removeBook(isbn) {
+    const books = Store.getBooks();
+    books.forEach((book, index)=>{
+     if(book.isbn === isbn){
+       books.splice(index, 1);
+
+     }
+    });
+   localStorage.setItem('books', JSON.stringify(books));
+  }
+}
+
+
 //event:display books
 
 document.addEventListener('DOMCOntentLoaded', UI.displayBooks);
@@ -86,18 +104,29 @@ document.querySelector('#book-form').addEventListener('submit', (e)=> {
    
     //instatiate book
     const book = new Book(title, author, isbn);
+   
     //add book to UL
     UI.addBookToList(book);
+   
+    //add book to store
+    Storage.addBook(book);
+   
     //Show success message
     UI.showAlert('Book Added', 'success');
-    //clear
+   
+    //clear fields
     UI.clearFields();
   }
 });
   
 //event:remove a book*/
 document.querySelector("#book-list").addEventListener("click", (e)=> {
+ 
+  //remove book from UI
   UI.deleteBook(e.target);
+  
+   //REmove book from store
+  Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
   
   //show success message
     UI.showAlert('Book Removed', 'success');
