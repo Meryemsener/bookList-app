@@ -68,7 +68,7 @@ const book = new Book(title, author, isbn);
 //add book to UL
 UI.addBookToList(book);
 //clear
-UI.clearField();
+UI.clearFields();
 });
 //event:remove a book*/
 
